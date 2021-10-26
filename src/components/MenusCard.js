@@ -17,20 +17,37 @@ export default function MenusCard(){
 
    const [data, setData] = useState({})
 
+   let formData = new FormData()
+
+
    const handleFileInput = (e) =>{
       e.preventDefault()
       
       setSelectedFile(URL.createObjectURL(e.target.files[0]))
 
       let file = e.target.files[0]
-      
+      console.log("file: ",file)
+
       setData({...data,"file":file})
    }
 
    const doUpload = async ()=>{
-      await api.get("/menus",data)
+      
+      formData.append("name",data.name)
+      formData.append("category",data.category)
+      formData.append("price",data.price)
+      formData.append("<FILE>",data.file)
+
+      console.log("Form",formData)
+
+      await api({
+         url: '/menu',
+         method: 'POST',
+         headers: '',
+         data: formData
+      })
          .then(res => {
-            console.log(res.data)
+            console.log("DATA : ",JSON.stringify(res.data))
             setShowModal(false)
          }).catch(err => {
             console.log("Error : ",err)

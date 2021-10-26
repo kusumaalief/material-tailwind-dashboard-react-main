@@ -4,8 +4,15 @@ const Menu = require('../models/Menu');
 const insertMenu = (req,res) => {
 
    const body = req.body || null
-   
-   return res.json(body)
+   let fileName=''
+
+   if(req.file){
+      let file = req.file
+      fileName = file.filename
+   }else{
+      return res.json({"Message: ":"File is not uploaded !"})
+   }
+
    if(body===null){
       return res.status(400).json({
          success: false,
@@ -24,7 +31,7 @@ const insertMenu = (req,res) => {
          return res.status(201).json({
             success: true,
             id: menu._id,
-            data:body,
+            data:{...body,"fileName":fileName},
             message: "Menu was created !"
          })
       })
